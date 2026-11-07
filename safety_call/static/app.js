@@ -288,6 +288,11 @@ function handle(events) {
         break;
       case "call_ended":
         addMsg("tool", "", "· Call ended");
+        // The agent said goodbye: leave its last words on screen for a moment.
+        if (e.reason === "finished") {
+          const endedId = callId;
+          setTimeout(() => { if (callId === endedId) closeCall("The agent ended the call."); }, 2500);
+        }
         break;
     }
   }
@@ -296,6 +301,22 @@ function handle(events) {
 // ---------------------------------------------------------------- call flow
 function showScreen(name) {
   for (const id of ["idle", "incoming", "incall"]) $(id).hidden = id !== name;
+}
+
+// Back to the idle phone: no call, no open prompts, mic and voice stopped.
+function closeCall(message) {
+  if (!callId) return;
+  callId = null;
+  speech.stop();
+  if (recognizer) recognizer.stop();
+  $("approve-box").hidden = true;
+  $("confirm-box").hidden = true;
+  $("say-input").value = "";
+  $("mic-msg").textContent = "";
+  $("idle-msg").textContent = `${message} The case timeline and letters stay in the bank view. Press "Place help call" to call again.`;
+  showScreen("idle");
+  $("phone-status").textContent = "Call ended";
+  $("phone").focus();
 }
 
 async function placeCall() {
@@ -342,11 +363,15 @@ $("answer").addEventListener("click", async () => {
   await act("answer");
   $("approve").focus();
 });
-$("decline").addEventListener("click", async () => { await act("decline"); showScreen("idle"); });
+$("decline").addEventListener("click", async () => { await act("decline"); closeCall("You declined the call. Nothing changed on your account."); });
 $("approve").addEventListener("click", () => act("approve", {}, "Connecting the agent…"));
 $("yes").addEventListener("click", () => act("decision", { send: true }, "Sending…"));
 $("no").addEventListener("click", () => act("decision", { send: false }, "Agent is thinking…"));
-$("hangup").addEventListener("click", () => { speech.stop(); act("hangup"); });
+$("hangup").addEventListener("click", async () => {
+  speech.stop();
+  await act("hangup");  // tell the server (cancels anything still waiting for a yes)
+  closeCall("You hung up.");  // close the call screen even if the server didn't answer
+});
 $("mic").addEventListener("click", toggleMic);
 $("voice-on").addEventListener("change", () => { if (!$("voice-on").checked) speech.stop(); });
 $("say-form").addEventListener("submit", (e) => {
