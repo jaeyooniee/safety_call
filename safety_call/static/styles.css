@@ -282,3 +282,6 @@ table.txs td.num { text-align: right; font-variant-numeric: tabular-nums; }
 /* The cards inside accordions don't need their own box. */
 .acc .event { background: var(--surface); }
 .phone-wrap .card.why { margin-top: 0; }
+
+.voice-row { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; margin-top: .5rem; font-size: .9rem; }
+.voice-row select { flex: 1 1 200px; min-width: 0; }

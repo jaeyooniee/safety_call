@@ -28,13 +28,45 @@ const speech = {
   speaking: false,
   voice: null,
   enabled() { return $("voice-on").checked && "speechSynthesis" in window; },
-  pickVoice() {
+  // Natural (neural) voices first: Edge's "Online (Natural)" voices, then Google's, then the rest.
+  score(v) {
+    let s = 0;
+    if (/natural/i.test(v.name)) s += 100;
+    if (/online/i.test(v.name)) s += 40;
+    if (/^google/i.test(v.name)) s += 60;
+    if (/sonia|libby|ryan|maisie|thomas/i.test(v.name)) s += 15;  // UK neural voices in Edge
+    if (v.lang === "en-GB") s += 30;
+    else if (v.lang.startsWith("en")) s += 5;
+    if (/hazel|george|susan|david|zira|mark/i.test(v.name) && !/natural/i.test(v.name)) s -= 50;  // older robotic voices
+    return s;
+  },
+  english() {
     const voices = window.speechSynthesis ? speechSynthesis.getVoices() : [];
-    this.voice = voices.find((v) => v.lang === "en-GB") || voices.find((v) => v.lang.startsWith("en")) || null;
+    return voices.filter((v) => v.lang.startsWith("en")).sort((a, b) => this.score(b) - this.score(a));
+  },
+  pickVoice() {
+    const voices = this.english();
+    let saved = null;
+    try { saved = localStorage.getItem("safety-call-voice"); } catch (_) {}
+    this.voice = voices.find((v) => v.name === saved) || voices[0] || null;
+    const select = $("voice-select");
+    if (!select) return;
+    select.innerHTML = voices.length
+      ? voices.map((v) => `<option value="${esc(v.name)}">${esc(v.name.replace(/^Microsoft /, ""))}</option>`).join("")
+      : `<option value="">No voices in this browser</option>`;
+    select.disabled = !voices.length;
+    if (this.voice) select.value = this.voice.name;
+  },
+  choose(name) {
+    this.voice = this.english().find((v) => v.name === name) || this.voice;
+    try { localStorage.setItem("safety-call-voice", name); } catch (_) {}
   },
   say(text) {
     if (!this.enabled()) return;
-    this.queue.push(text);
+    // One sentence at a time sounds more natural and avoids cut-offs on long lines.
+    for (const part of text.match(/[^.!?]+[.!?]+["']?|\S[^.!?]*$/g) || [text]) {
+      if (part.trim()) this.queue.push(part.trim());
+    }
     if (!this.speaking) this.next();
   },
   next() {
@@ -43,8 +75,9 @@ const speech = {
     this.speaking = true;
     const u = new SpeechSynthesisUtterance(text);
     if (this.voice) u.voice = this.voice;
-    u.lang = "en-GB";
-    u.rate = 0.98;
+    u.lang = this.voice ? this.voice.lang : "en-GB";
+    u.rate = 1.0;
+    u.pitch = 1.0;
     u.onend = u.onerror = () => this.next();
     speechSynthesis.speak(u);
   },
@@ -374,6 +407,11 @@ $("hangup").addEventListener("click", async () => {
 });
 $("mic").addEventListener("click", toggleMic);
 $("voice-on").addEventListener("change", () => { if (!$("voice-on").checked) speech.stop(); });
+$("voice-select").addEventListener("change", (e) => {
+  speech.choose(e.target.value);
+  speech.stop();
+  speech.say("Hello Amira. This is how I sound.");
+});
 $("say-form").addEventListener("submit", (e) => {
   e.preventDefault();
   const text = $("say-input").value.trim();
