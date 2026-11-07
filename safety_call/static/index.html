@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Safety Call</title>
+  <meta name="description" content="Concept demo: a bank calls before a money crisis, proves it is really the bank first, and does the paperwork with the customer's yes.">
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to main content</a>
+
+  <div class="utility">
+    <div class="wrap utility-in">
+      <p>Concept demo · synthetic data · not a real bank</p>
+      <p class="mode" id="mode" aria-live="polite">Loading…</p>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <div class="wrap header-in">
+      <a class="wordmark" href="/" aria-label="Safety Call home">
+        <svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z" fill="currentColor"/></svg>
+        <span>Safety Call</span>
+      </a>
+      <nav aria-label="Main">
+        <ul class="nav">
+          <li><a href="#customer-h">Customer</a></li>
+          <li><a href="#stress-h">Stress test</a></li>
+          <li><a href="#case-h">Case and letters</a></li>
+          <li><a href="#safe-h">Security and trust</a></li>
+          <li><a href="#phone-h">The call</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <nav class="crumbs wrap" aria-label="Breadcrumb">
+    <ol>
+      <li><a href="/">Personal</a></li>
+      <li><a href="/">Support centre</a></li>
+      <li aria-current="page">Help call</li>
+    </ol>
+  </nav>
+
+  <div class="wrap page-title">
+    <h1>Help before things go wrong</h1>
+    <p class="lead">We call before the crisis, not after. The bank proves it is really the bank first, explains what it sees in plain words, and only sends anything with your yes.</p>
+  </div>
+
+  <ul class="principles wrap" aria-label="Our promises">
+    <li><strong>Your forecast is yours.</strong> Never used for lending, credit limits or credit scores.</li>
+    <li><strong>Guidance, not advice.</strong> Options and paperwork; the organisation decides.</li>
+    <li><strong>Nothing sent without your yes.</strong> Say "that's wrong" and it is corrected.</li>
+  </ul>
+
+  <main id="main" class="wrap layout">
+    <!-- ============ Bank view ============ -->
+    <section class="bank" aria-labelledby="bank-h">
+      <h2 id="bank-h">What the bank sees</h2>
+
+      <h3 class="tiles-h">Jump to</h3>
+      <ul class="tiles">
+        <li><a href="#customer-h"><span class="tile-ico t1" aria-hidden="true"></span>Customer and life events</a></li>
+        <li><a href="#stress-h"><span class="tile-ico t2" aria-hidden="true"></span>Stress test and trigger</a></li>
+        <li><a href="#case-h"><span class="tile-ico t3" aria-hidden="true"></span>Timeline and letters</a></li>
+        <li><a href="#safe-h"><span class="tile-ico t4" aria-hidden="true"></span>Security and trust</a></li>
+      </ul>
+
+      <details class="acc" open>
+        <summary><h3 id="customer-h">Customer and life events</h3></summary>
+        <div class="acc-body">
+          <h4>Customer</h4>
+          <div id="customer" class="customer"></div>
+          <h4>Life events detected from transactions</h4>
+          <p class="hint">Classified by what happened, not by what the customer asked. Each one prepares a support bundle.</p>
+          <div id="events" class="events"></div>
+        </div>
+      </details>
+
+      <details class="acc" open>
+        <summary><h3 id="stress-h">Household stress test: next 90 days</h3></summary>
+        <div class="acc-body">
+          <p class="hint">2,000 simulated futures with the shocks that hit this household. The shaded bands hold 80% and 50% of futures; the line is the typical path.</p>
+          <figure class="chart">
+            <svg id="fan" viewBox="0 0 640 300" role="img" aria-labelledby="fan-title fan-desc">
+              <title id="fan-title">Forecast balance over 90 days</title>
+              <desc id="fan-desc">Loading forecast.</desc>
+            </svg>
+            <figcaption class="legend">
+              <span><i class="sw sw-base" aria-hidden="true"></i>Do nothing</span>
+              <span id="legend-after" hidden><i class="sw sw-after" aria-hidden="true"></i>With the agreed actions</span>
+              <span><i class="sw sw-zero" aria-hidden="true"></i>Below zero</span>
+            </figcaption>
+          </figure>
+          <p id="risk-summary" class="risk" aria-live="polite"></p>
+          <div id="drivers"></div>
+          <div class="trigger" id="trigger"></div>
+        </div>
+      </details>
+
+      <details class="acc" open>
+        <summary><h3 id="case-h">Case timeline and letters</h3></summary>
+        <div class="acc-body">
+          <h4>Case timeline</h4>
+          <ol id="timeline" class="timeline" aria-live="polite"><li class="muted">No call yet.</li></ol>
+          <h4>Letters and case file</h4>
+          <div id="drafts"><p class="muted">Nothing drafted yet.</p></div>
+        </div>
+      </details>
+
+      <details class="acc" open>
+        <summary><h3 id="safe-h">Security and trust</h3></summary>
+        <div class="acc-body">
+          <h4>Reverse authentication: the bank proves itself first</h4>
+          <p class="hint">Chosen by the customer at enrolment. The system speaks it at the start of every call. The AI agent never sees it.</p>
+          <p>Safe phrase on file: <span id="phrase-masked" class="phrase"></span>
+            <button type="button" class="btn small ghost" id="phrase-reveal" aria-pressed="false">Show</button></p>
+          <form id="phrase-form" class="inline-form">
+            <label for="phrase-input">Change safe phrase</label>
+            <input id="phrase-input" autocomplete="off" placeholder="e.g. red bike in April">
+            <button class="btn small" type="submit">Save</button>
+            <p id="phrase-msg" class="field-msg" aria-live="polite"></p>
+          </form>
+
+          <h4>Speech guard</h4>
+          <p class="hint">Every sentence is checked before it is spoken. Try to make the agent ask for a PIN.</p>
+          <form id="guard-form" class="inline-form">
+            <label for="guard-input">Sentence to check</label>
+            <input id="guard-input" value="To confirm it's you, can you tell me your PIN?">
+            <button class="btn small" type="submit">Check</button>
+            <p id="guard-msg" class="field-msg" aria-live="polite"></p>
+          </form>
+
+          <h4>Prediction firewall</h4>
+          <p class="hint" id="policy"></p>
+          <form id="fw-form" class="inline-form">
+            <label for="fw-purpose">Use the forecast for</label>
+            <select id="fw-purpose"></select>
+            <button class="btn small" type="submit">Try</button>
+            <p id="fw-msg" class="field-msg" aria-live="polite"></p>
+          </form>
+        </div>
+      </details>
+
+      <details class="acc">
+        <summary><h3>Recent transactions and bills</h3></summary>
+        <div class="acc-body" id="txs"></div>
+      </details>
+    </section>
+
+    <!-- ============ Customer phone ============ -->
+    <aside class="phone-wrap" aria-labelledby="phone-h" id="phone" tabindex="-1">
+      <h2 id="phone-h">What Amira hears</h2>
+      <div class="phone">
+        <div class="phone-status" id="phone-status" aria-live="assertive">No call</div>
+
+        <div id="idle" class="screen">
+          <p class="muted">The bank's stress test decides when to call. Press "Place help call" in the bank view.</p>
+        </div>
+
+        <div id="incoming" class="screen" hidden>
+          <p class="incoming-title">Incoming call</p>
+          <p class="incoming-from">Safety Call · your bank</p>
+          <div class="row">
+            <button class="btn big ok" id="answer">Answer</button>
+            <button class="btn big danger" id="decline">Decline</button>
+          </div>
+        </div>
+
+        <div id="incall" class="screen" hidden>
+          <div id="transcript" class="transcript" role="log" aria-live="polite" aria-label="Call transcript"></div>
+
+          <div id="approve-box" class="notice" hidden>
+            <p><strong>Banking app:</strong> Safety Call is calling you. Approve?</p>
+            <button class="btn ok" id="approve">Approve in app</button>
+            <span class="stub">Stub: real app approval not built</span>
+          </div>
+
+          <div id="confirm-box" class="notice" hidden>
+            <p id="confirm-text"><strong>Send?</strong></p>
+            <div class="row">
+              <button class="btn ok" id="yes">Yes, send</button>
+              <button class="btn ghost" id="no">No, don't send</button>
+            </div>
+          </div>
+
+          <form id="say-form" class="say">
+            <label for="say-input" class="sr-only">Say something</label>
+            <input id="say-input" autocomplete="off" placeholder="Type, or press Speak">
+            <button type="button" class="btn" id="mic" aria-pressed="false">Speak</button>
+            <button type="submit" class="btn">Send</button>
+          </form>
+          <p id="mic-msg" class="field-msg" aria-live="polite"></p>
+          <div class="row end">
+            <label class="toggle"><input type="checkbox" id="voice-on" checked> Read aloud</label>
+            <button class="btn danger" id="hangup">Hang up</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-box" role="note">
+        <h3>If you're unsure it's really us</h3>
+        <p>We will never ask for your PIN, passwords, card details or any codes. Hang up and call:</p>
+        <dl class="numbers">
+          <dt>Call 159</dt><dd>Connects you straight to your bank</dd>
+          <dt>The number on the back of your card</dt><dd>Always safe to use</dd>
+        </dl>
+      </div>
+
+      <article class="card why" aria-labelledby="why-h">
+        <h3 id="why-h">Why? Where each figure came from</h3>
+        <div id="why"><p class="muted">Figures the agent says are traced to their source here.</p></div>
+      </article>
+    </aside>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-cols">
+      <section>
+        <h2>About this demo</h2>
+        <ul>
+          <li>Concept prototype for a hackathon</li>
+          <li>Synthetic data only</li>
+          <li>Letters and calls are simulated</li>
+        </ul>
+      </section>
+      <section>
+        <h2>Security and trust</h2>
+        <ul>
+          <li><a href="#safe-h">Safe phrase</a></li>
+          <li><a href="#safe-h">Speech guard</a></li>
+          <li><a href="#safe-h">Prediction firewall</a></li>
+        </ul>
+      </section>
+      <section>
+        <h2>Support rules</h2>
+        <ul>
+          <li>Illustrative summaries of public rules</li>
+          <li>The organisation decides</li>
+          <li>Guidance, not financial advice</li>
+        </ul>
+      </section>
+    </div>
+  </footer>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
