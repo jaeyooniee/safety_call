@@ -22,6 +22,16 @@ async function api(path, body) {
   return data;
 }
 
+// "Microsoft Ryan Online (Natural) - English (United Kingdom)" -> "Ryan (Natural, UK)"
+function shortVoiceName(v) {
+  const region = { "en-GB": "UK", "en-US": "US", "en-AU": "Australia", "en-IE": "Ireland", "en-IN": "India", "en-CA": "Canada" }[v.lang] || v.lang;
+  let name = v.name.replace(/^Microsoft\s+/, "").replace(/\s*-\s*English.*$/i, "").replace(/\s+Online/i, "");
+  const natural = /\(Natural\)/i.test(name);
+  name = name.replace(/\s*\(Natural\)/i, "").trim();
+  const tags = [natural && "Natural", !new RegExp(`\\b${region}\\b`).test(name) && region].filter(Boolean);
+  return tags.length ? `${name} (${tags.join(", ")})` : name;
+}
+
 // ---------------------------------------------------------------- speech out
 const speech = {
   queue: [],
@@ -52,7 +62,7 @@ const speech = {
     const select = $("voice-select");
     if (!select) return;
     select.innerHTML = voices.length
-      ? voices.map((v) => `<option value="${esc(v.name)}">${esc(v.name.replace(/^Microsoft /, ""))}</option>`).join("")
+      ? voices.map((v) => `<option value="${esc(v.name)}">${esc(shortVoiceName(v))}</option>`).join("")
       : `<option value="">No voices in this browser</option>`;
     select.disabled = !voices.length;
     if (this.voice) select.value = this.voice.name;

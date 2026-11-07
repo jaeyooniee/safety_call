@@ -283,5 +283,8 @@ table.txs td.num { text-align: right; font-variant-numeric: tabular-nums; }
 .acc .event { background: var(--surface); }
 .phone-wrap .card.why { margin-top: 0; }
 
-.voice-row { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; margin-top: .5rem; font-size: .9rem; }
-.voice-row select { flex: 1 1 200px; min-width: 0; }
+.voice-row { margin-top: .75rem; font-size: .9rem; }
+.voice-row label { display: block; margin-bottom: .25rem; }
+/* Stay inside the phone frame however long a voice name is. */
+.voice-row select { display: block; width: 100%; max-width: 100%; min-width: 0; text-overflow: ellipsis; }
+.phone, .screen { min-width: 0; max-width: 100%; }
